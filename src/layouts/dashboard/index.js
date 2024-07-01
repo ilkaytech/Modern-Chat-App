@@ -9,7 +9,6 @@ import Logo from "../../assets/Images/logo.ico";
 import { Nav_Buttons } from "../../data";
 
 import useSettings from "../../hooks/useSettings";
-import GeneralApp from "../../pages/dashboard/GeneralApp";
 
 const AntSwitch = styled(Switch)(({ theme }) => ({
   width: 40,
@@ -63,7 +62,7 @@ const DashboardLayout = () => {
   const { onToggleMode } = useSettings();
 
   return (
-    <>
+    <Stack direction="row">
       <Box
         p={2}
         sx={{
@@ -160,10 +159,8 @@ const DashboardLayout = () => {
           </Stack>
         </Stack>
       </Box>
-
       <Outlet />
-      <GeneralApp />
-    </>
+    </Stack>
   );
 };
 
