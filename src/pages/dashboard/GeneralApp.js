@@ -8,7 +8,7 @@ const GeneralApp = () => {
   const theme = useTheme();
 
   return (
-    <Stack direction={"row"} sx={{ width: "100%" }}>
+    <Stack direction="row" sx={{ width: "100%" }}>
       {/* Chats */}
       <Chats />
       <Box
@@ -17,8 +17,8 @@ const GeneralApp = () => {
           width: "calc(100vw -420px",
           backgroundColor:
             theme.palette.mode === "light"
-              ? "#fff"
-              : theme.palette.background.default,
+              ? "#FFF"
+              : theme.palette.background.paper,
         }}
       >
         {/* Conversation */}

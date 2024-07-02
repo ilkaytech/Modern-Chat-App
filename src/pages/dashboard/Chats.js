@@ -1,3 +1,4 @@
+import React from "react";
 import { styled, alpha, useTheme } from "@mui/material/styles";
 import {
   Box,
@@ -11,7 +12,6 @@ import {
   Badge,
 } from "@mui/material";
 import { ArchiveBox, CircleDashed, MagnifyingGlass } from "phosphor-react";
-import React from "react";
 import { faker } from "@faker-js/faker";
 import { ChatList } from "../../data";
 import { SimpleBarStyle } from "../../components/Scrollbar";
