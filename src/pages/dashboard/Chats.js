@@ -50,6 +50,7 @@ const ChatElement = ({ id, name, img, msg, time, unread, online }) => {
 
   return (
     <Box
+      key={id}
       sx={{
         width: "100%",
         borderRadius: 1,
@@ -151,7 +152,7 @@ const Chats = () => {
             </SearchIconWrapper>
             <StyledInputBase
               placeholder="Search..."
-              inputProps={{ "aria-laber": "search" }}
+              inputProps={{ "aria-label": "search" }}
             />
           </Search>
         </Stack>
@@ -172,17 +173,17 @@ const Chats = () => {
               <Typography variant="subtitle2" sx={{ color: "#676767" }}>
                 Pinned
               </Typography>
-              {ChatList.filter((el) => el.pinned).map((el) => {
-                return <ChatElement {...el} />;
-              })}
+              {ChatList.filter((el) => el.pinned).map((el) => (
+                <ChatElement key={el.id} {...el} />
+              ))}
             </Stack>
             <Stack spacing={2.4}>
               <Typography variant="subtitle2" sx={{ color: "#676767" }}>
                 All Chats
               </Typography>
-              {ChatList.filter((el) => !el.pinned).map((el) => {
-                return <ChatElement {...el} />;
-              })}
+              {ChatList.filter((el) => !el.pinned).map((el) => (
+                <ChatElement key={el.id} {...el} />
+              ))}
             </Stack>
           </SimpleBarStyle>
         </Stack>

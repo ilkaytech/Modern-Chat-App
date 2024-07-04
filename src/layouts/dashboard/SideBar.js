@@ -1,8 +1,16 @@
 import React, { useState } from "react";
-import { Avatar, Box, Divider, IconButton, Stack } from "@mui/material";
+import {
+  Avatar,
+  Box,
+  Divider,
+  IconButton,
+  Menu,
+  MenuItem,
+  Stack,
+} from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { Gear } from "phosphor-react";
-import { Nav_Buttons } from "../../data";
+import { Nav_Buttons, Profile_Menu } from "../../data";
 import useSettings from "../../hooks/useSettings";
 import AntSwitch from "../../components/AntSwitch";
 import { faker } from "@faker-js/faker";
@@ -13,6 +21,15 @@ const SideBar = () => {
   const theme = useTheme();
   const [selected, setSelected] = useState(0);
   const { onToggleMode } = useSettings();
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   return (
     <Box
@@ -48,28 +65,26 @@ const SideBar = () => {
             alignItems="center"
             spacing={3}
           >
-            {Nav_Buttons.map((el) =>
+            {Nav_Buttons.map((el, index) =>
               el.index === selected ? (
                 <Box
+                  key={index}
                   sx={{
                     backgroundColor: theme.palette.primary.main,
                     borderRadius: 1.5,
                   }}
                 >
-                  <IconButton
-                    sx={{ width: "max-content", color: "#fff" }}
-                    key={el.index}
-                  >
+                  <IconButton sx={{ width: "max-content", color: "#fff" }}>
                     {el.icon}
                   </IconButton>
                 </Box>
               ) : (
                 <IconButton
                   onClick={() => {
-                    setSelected(el.index);
+                    setSelected(index);
                   }}
                   sx={{ width: "max-content" }}
-                  key={el.index}
+                  key={index}
                 >
                   {el.icon}
                 </IconButton>
@@ -78,6 +93,7 @@ const SideBar = () => {
             <Divider sx={{ width: "48px" }} />
             {selected === 3 ? (
               <Box
+                key="gear-selected"
                 sx={{
                   backgroundColor: theme.palette.primary.main,
                   borderRadius: 1.5,
@@ -92,6 +108,7 @@ const SideBar = () => {
                 onClick={() => {
                   setSelected(3);
                 }}
+                key="gear"
               >
                 <Gear />
               </IconButton>
@@ -107,7 +124,49 @@ const SideBar = () => {
             }}
             defaultChecked
           />
-          <Avatar src={faker.image.avatar()} />
+          <Avatar
+            id="basic-button"
+            aria-controls={open ? "basic-menu" : undefined}
+            aria-haspopup="true"
+            aria-expanded={open ? "true" : undefined}
+            onClick={handleClick}
+            src={faker.image.avatar()}
+          />
+          <Menu
+            id="basic-menu"
+            anchorEl={anchorEl}
+            open={open}
+            onClose={handleClose}
+            MenuListProps={{
+              "aria-labelledby": "basic-button",
+            }}
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "right",
+            }}
+            transformOrigin={{
+              vertical: "bottom",
+              horizontal: "left",
+            }}
+          >
+            <Stack spacing={1} px={1}>
+              {Profile_Menu.map((el) => {
+                return (
+                  <MenuItem onClick={handleClick}>
+                    <Stack
+                      sx={{ width: 100 }}
+                      direction="row"
+                      alignItems="center"
+                      justifyContent="space-between"
+                    >
+                      <span>{el.title}</span>
+                      {el.icon}
+                    </Stack>
+                  </MenuItem>
+                );
+              })}
+            </Stack>
+          </Menu>
         </Stack>
       </Stack>
     </Box>
