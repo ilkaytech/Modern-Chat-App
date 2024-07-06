@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 //
+import { dispatch } from "../store";
 
 /* ----------------------------------------------------------- */
 const initialState = {
@@ -16,10 +17,10 @@ const slice = createSlice({
   reducers: {
     // Toggle Sidebar
     toggleSideBar(state) {
-      state.sideBar.open = !state.sideBar.open;
+      state.sidebar.open = !state.sidebar.open;
     },
     updateSideBarType(state, action) {
-      state.sideBar.type = action.payload.type;
+      state.sidebar.type = action.payload.type;
     },
   },
 });
@@ -27,5 +28,17 @@ const slice = createSlice({
 // Reducer
 export default slice.reducer;
 //
-export function toggleSideBar() {}
-export function UpdateSidebarType() {}
+export function toggleSideBar() {
+  return async () => {
+    dispatch(slice.actions.toggleSideBar());
+  };
+}
+
+export function UpdateSidebarType(type) {
+  dispatch(
+    slice.actions.UpdateSidebarType({
+      type,
+    })
+  );
+  return async () => {};
+}
