@@ -15,7 +15,7 @@ import useSettings from "../../hooks/useSettings";
 import AntSwitch from "../../components/AntSwitch";
 import { faker } from "@faker-js/faker";
 
-import Logo from "../../assets/Images/logo.ico";
+import Logo from "../../assets/Images/logo.png";
 
 const SideBar = () => {
   const theme = useTheme();
