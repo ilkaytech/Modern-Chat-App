@@ -28,17 +28,14 @@ const slice = createSlice({
 // Reducer
 export default slice.reducer;
 //
-export function toggleSideBar() {
+export function ToggleSidebar() {
   return async () => {
     dispatch(slice.actions.toggleSideBar());
   };
 }
 
 export function UpdateSidebarType(type) {
-  dispatch(
-    slice.actions.UpdateSidebarType({
-      type,
-    })
-  );
-  return async () => {};
+  return async (dispatch) => {
+    dispatch(slice.actions.updateSideBarType({ type }));
+  };
 }

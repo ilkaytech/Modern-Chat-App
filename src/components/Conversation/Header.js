@@ -12,7 +12,7 @@ import { faker } from "@faker-js/faker";
 
 import React from "react";
 import StyledBadge from "../settings/StyledBadge";
-import { toggleSideBar } from "../../redux/slices/app";
+import { ToggleSidebar } from "../../redux/slices/app";
 import { useDispatch } from "react-redux";
 
 const Header = () => {
@@ -38,7 +38,7 @@ const Header = () => {
       >
         <Stack
           onClick={() => {
-            dispatch(toggleSideBar());
+            dispatch(ToggleSidebar());
           }}
           direction={"row"}
           spacing={2}

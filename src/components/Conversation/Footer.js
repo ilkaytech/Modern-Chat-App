@@ -80,8 +80,8 @@ const ChatInput = ({ setOpenPicker }) => {
                 display: openActions ? "inline-block" : "none",
               }}
             >
-              {Actions.map((el) => (
-                <Tooltip placement="right" title={el.title}>
+              {Actions.map((el, index) => (
+                <Tooltip key={index} placement="right" title={el.title}>
                   <Fab
                     sx={{
                       position: "absolute",
