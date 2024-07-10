@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Avatar,
   Box,
@@ -19,11 +19,21 @@ import {
   Note,
   PencilCircle,
 } from "phosphor-react";
+
 import { faker } from "@faker-js/faker";
 import Shortcuts from "../../sections/settings/Shortcuts";
 
 const Settings = () => {
   const theme = useTheme();
+
+  const [openShortcuts, setOpenShortcuts] = useState(false);
+
+  const handleOpenShortcuts = () => {
+    setOpenShortcuts(true);
+  };
+  const handleCloseShortcuts = () => {
+    setOpenShortcuts(false);
+  };
 
   const list = [
     {
@@ -67,8 +77,8 @@ const Settings = () => {
       key: 6,
       icon: <Keyboard size={20} />,
       title: "Keyboard Shortcuts",
-      //   onclick: handleOpenShortcuts,
-      onclick: () => {},
+      onClick: handleOpenShortcuts,
+      //   onclick: () => {},
     },
     {
       key: 7,
@@ -138,7 +148,9 @@ const Settings = () => {
         </Box>
         {/* RightPanel */}
       </Stack>
-      <Shortcuts open={true} handleClose={() => {}} />
+      {openShortcuts && (
+        <Shortcuts open={openShortcuts} handleClose={handleCloseShortcuts} />
+      )}
     </>
   );
 };
