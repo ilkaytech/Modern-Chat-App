@@ -6,10 +6,11 @@ import { useTheme } from "@mui/material/styles";
 import Contact from "../../components/Contact";
 import { useSelector } from "react-redux";
 import SharedMessages from "../../components/SharedMessages";
+import StarredMessages from "../../components/StarredMessages";
 
 const GeneralApp = () => {
   const theme = useTheme();
-  const { sidebar } = useSelector((store) => store.app);
+  const { sidebar } = useSelector((state) => state.app);
 
   return (
     <Stack direction="row" sx={{ width: "100%" }}>
@@ -36,10 +37,9 @@ const GeneralApp = () => {
               return <Contact />;
 
             case "STARRED":
-              break;
+              return <StarredMessages />;
             case "SHARED":
               return <SharedMessages />;
-
             default:
               break;
           }
