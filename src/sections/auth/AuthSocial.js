@@ -1,6 +1,6 @@
+import React from "react";
 import { Divider, IconButton, Stack } from "@mui/material";
 import { GithubLogo, GoogleLogo, TwitterLogo } from "phosphor-react";
-import React from "react";
 
 const AuthSocial = () => {
   return (
@@ -19,8 +19,8 @@ const AuthSocial = () => {
         <IconButton>
           <GoogleLogo color="#DF3E30" />
         </IconButton>
-        <IconButton>
-          <GithubLogo color="inherit" />
+        <IconButton color="inherit">
+          <GithubLogo />
         </IconButton>
         <IconButton>
           <TwitterLogo color="#1C9CEA" />
