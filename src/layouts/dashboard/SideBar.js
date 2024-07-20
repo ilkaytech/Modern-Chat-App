@@ -16,9 +16,42 @@ import AntSwitch from "../../components/AntSwitch";
 import { faker } from "@faker-js/faker";
 
 import Logo from "../../assets/Images/logo.png";
+import { useNavigate } from "react-router-dom";
+
+const getPath = (index) => {
+  switch (index) {
+    case 0:
+      return "/app";
+    case 1:
+      return "/group";
+    case 2:
+      return "/call";
+    case 3:
+      return "/settings";
+
+    default:
+      break;
+  }
+};
+
+const getMenuPath = (index) => {
+  switch (index) {
+    case 0:
+      return "/profile";
+    case 1:
+      return "/settings";
+    case 2:
+      // TODO => Update token & set isAuth = false
+      return "/auth/login";
+
+    default:
+      break;
+  }
+};
 
 const SideBar = () => {
   const theme = useTheme();
+  const navigate = useNavigate();
   const [selected, setSelected] = useState(0);
   const { onToggleMode } = useSettings();
 
@@ -81,10 +114,17 @@ const SideBar = () => {
               ) : (
                 <IconButton
                   onClick={() => {
-                    setSelected(index);
+                    setSelected(el.index);
+                    navigate(getPath(el.index));
                   }}
-                  sx={{ width: "max-content" }}
-                  key={index}
+                  sx={{
+                    width: "max-content",
+                    color:
+                      theme.palette.mode === "light"
+                        ? "#000"
+                        : theme.palette.text.primary,
+                  }}
+                  key={el.index}
                 >
                   {el.icon}
                 </IconButton>
@@ -93,7 +133,7 @@ const SideBar = () => {
             <Divider sx={{ width: "48px" }} />
             {selected === 3 ? (
               <Box
-                key="gear-selected"
+                p={1}
                 sx={{
                   backgroundColor: theme.palette.primary.main,
                   borderRadius: 1.5,
@@ -106,9 +146,16 @@ const SideBar = () => {
             ) : (
               <IconButton
                 onClick={() => {
+                  navigate(getPath(3));
                   setSelected(3);
                 }}
-                key="gear"
+                sx={{
+                  width: "max-content",
+                  color:
+                    theme.palette.mode === "light"
+                      ? "#000"
+                      : theme.palette.text.primary,
+                }}
               >
                 <Gear />
               </IconButton>
@@ -116,7 +163,7 @@ const SideBar = () => {
           </Stack>
         </Stack>
 
-        <Stack spacing={3}>
+        <Stack spacing={4}>
           {/* Switch */}
           <AntSwitch
             onChange={() => {
@@ -150,10 +197,17 @@ const SideBar = () => {
             }}
           >
             <Stack spacing={1} px={1}>
-              {Profile_Menu.map((el) => {
+              {Profile_Menu.map((el, idx) => {
                 return (
-                  <MenuItem key={el.title} onClick={handleClick}>
+                  <MenuItem
+                    onClick={() => {
+                      handleClick();
+                    }}
+                  >
                     <Stack
+                      onClick={() => {
+                        navigate(getMenuPath(idx));
+                      }}
                       sx={{ width: 100 }}
                       direction="row"
                       alignItems="center"
