@@ -3,6 +3,9 @@
           | Modern Chat API |
 ----------------------------------------- */
 const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs");
+const crypto = require("crypto");
+
 /* ------------------------------------------------------- */
 // User Model:
 
@@ -13,7 +16,7 @@ const userSchema = new mongoose.Schema({
   },
   lastName: {
     type: String,
-    require: [true, "Last Name is required"],
+    required: [true, "Last Name is required"],
   },
   avatar: {
     type: String,
@@ -35,6 +38,9 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
   },
+  passwordConfirm: {
+    type: String,
+  },
   passwordChangedAt: {
     type: Date,
   },
@@ -50,7 +56,68 @@ const userSchema = new mongoose.Schema({
   updatedAt: {
     type: Date,
   },
+  verified: {
+    type: Boolean,
+    default: false,
+  },
+  otp: {
+    type: Number,
+  },
+  opt_expiry_time: {
+    type: Date,
+  },
 });
+
+userSchema.pre("save", async function (next) {
+  // Only run this fxn if OTP is actually modified
+
+  if (!this.isModified("otp")) return next();
+
+  // Hash the OTP with the cost of 12
+  this.otp = await bcryptjs.hash(this.otp, 12);
+});
+next();
+
+userSchema.pre("save", async function (next) {
+  // Only run this fxn if OTP is actually modified
+
+  if (!this.isModified("password")) return next();
+
+  // Hash the OTP with the cost of 12
+  this.otp = await bcryptjs.hash(this.password, 12);
+});
+next();
+
+userSchema.methods.correctPassword = async function (
+  canditatePassword, // 123456
+  userPassword
+) {
+  return await bcrypt.compare(canditatePassword, userPassword);
+};
+
+userSchema.methods.correctOTP = async function (
+  canditateOTP, // 123456
+  userOTP
+) {
+  return await bcrypt.compare(canditateOTP, userOTP);
+};
+
+userSchema.methods.createPasswordResetToken = function () {
+  const resetToken = crypto.randomBytes(32).toString("hex");
+
+  this.passwordResetToken = crypto
+    .createHash("sha256")
+    .update(resetToken)
+    .digest("hex");
+
+  this.passwordResetExpires = Date.now() + 10 * 60 * 1000;
+
+  return resetToken;
+};
+
+userSchema.methods.changedPasswordAfter = function (timestamp) {
+  return timestamp < this.passwordChangedAt;
+};
 
 /* ------------------------------------------------------- */
 module.exports = mongoose.model("User", userSchema);
