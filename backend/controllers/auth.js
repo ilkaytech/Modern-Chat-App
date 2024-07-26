@@ -12,6 +12,7 @@ const crypto = require("crypto");
 const User = require("../models/user");
 const filterObj = require("../utils/filterObj");
 const { promisify } = require("util");
+const mailService = require("../services/mailler");
 
 /* ------------------------------------------------------- */
 
@@ -78,6 +79,13 @@ exports.sendOTP = async (req, res, next) => {
   });
 
   // TODO Send Mail
+
+  mailService.sendEmail({
+    from: "ilkaytech@gmail.com",
+    to: "example@gmail.com",
+    subject: "OTP for Tawk",
+    text: `Your OTP is ${new_otp}. This is valid for 10 Mins.`,
+  });
 
   res.status(200).json({
     status: "success",

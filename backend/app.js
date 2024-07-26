@@ -3,6 +3,7 @@
           | Modern Chat API |
 ----------------------------------------- */
 const express = require("express");
+const routes = require("./routes");
 const morgan = require("morgan");
 
 /* ------------------------------------------------------- */
@@ -49,6 +50,8 @@ const limiter = rateLimit({
 app.use("/tawk", limiter);
 
 //Routes
+
+app.use(routes);
 
 //Error Handling
 

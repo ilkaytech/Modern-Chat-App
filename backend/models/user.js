@@ -74,9 +74,9 @@ userSchema.pre("save", async function (next) {
   if (!this.isModified("otp")) return next();
 
   // Hash the OTP with the cost of 12
-  this.otp = await bcryptjs.hash(this.otp, 12);
+  this.otp = await bcrypt.hash(this.otp, 12);
+  next();
 });
-next();
 
 userSchema.pre("save", async function (next) {
   // Only run this fxn if OTP is actually modified
@@ -84,9 +84,9 @@ userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
 
   // Hash the OTP with the cost of 12
-  this.otp = await bcryptjs.hash(this.password, 12);
+  this.otp = await bcrypt.hash(this.password, 12);
+  next();
 });
-next();
 
 userSchema.methods.correctPassword = async function (
   canditatePassword, // 123456
