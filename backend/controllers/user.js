@@ -4,6 +4,7 @@
 ----------------------------------------- */
 // User Controller:
 const User = require("../models/user");
+const filterObj = require("../utils/filterObj");
 /* ------------------------------------------------------- */
 
 exports.updateMe = async (req, res, next) => {
@@ -23,7 +24,7 @@ exports.updateMe = async (req, res, next) => {
   });
 
   res.status(200).json({
-    status: "error",
+    status: "success",
     data: update_user,
     message: "Profile Updated successfully!",
   });

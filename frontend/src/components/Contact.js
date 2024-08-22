@@ -265,7 +265,7 @@ const Contact = () => {
         <BlockDialog open={openBlock} handleClose={handleCloseBlock} />
       )}
 
-      {openBlock && (
+      {openDelete && (
         <DeleteDialog open={openDelete} handleClose={handleCloseDelete} />
       )}
     </Box>

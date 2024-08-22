@@ -14,8 +14,11 @@ import {
 import FormProvider from "../../components/hook-form/FormProvider";
 import { RHFTextField } from "../../components/hook-form";
 import { Eye, EyeSlash } from "phosphor-react";
+import { LoginUser } from "../../redux/slices/auth";
+import { useDispatch } from "react-redux";
 
 const LoginForm = () => {
+  const dispatch = useDispatch();
   const [showPassword, setShowPassword] = useState(false);
 
   const LoginSchema = Yup.object().shape({
@@ -26,7 +29,7 @@ const LoginForm = () => {
   });
 
   const defaultValues = {
-    email: "demo@app.com",
+    email: "info@chatbop.com",
     password: "demo1234",
   };
 
@@ -45,8 +48,9 @@ const LoginForm = () => {
   const onSubmit = async (data) => {
     try {
       // submit data to backend
+      dispatch(LoginUser(data));
     } catch (error) {
-      console.error(error);
+      console.log(error);
       reset();
       setError("afterSubmit", {
         ...error,
@@ -69,12 +73,14 @@ const LoginForm = () => {
           type={showPassword ? "text" : "password"}
           InputProps={{
             endAdornment: (
-              <InputAdornment
-                onClick={() => {
-                  setShowPassword(!showPassword);
-                }}
-              >
-                <IconButton>{showPassword ? <Eye /> : <EyeSlash />}</IconButton>
+              <InputAdornment>
+                <IconButton
+                  onClick={() => {
+                    setShowPassword(!showPassword);
+                  }}
+                >
+                  {showPassword ? <Eye /> : <EyeSlash />}
+                </IconButton>
               </InputAdornment>
             ),
           }}

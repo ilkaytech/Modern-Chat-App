@@ -6,16 +6,16 @@ const router = require("express").Router();
 /* ------------------------------------------------------- */
 // routes/:
 
-const authController = require("../controllers/auth");
+const auth = require("../controllers/auth");
 
 // URL: /
 
-router.post("/login", authController.login);
-router.post("/register", authController.register);
-router.post("/send-otp", authController.sendOTP);
-router.post("/verify-otp", authController.verifyOTP);
-router.post("/forgot-password", authController.forgotPassword);
-router.post("/reset-password", authController.resetPassword);
+router.post("/login", auth.login);
+router.post("/register", auth.register, auth.sendOTP);
+router.post("/send-otp", auth.sendOTP);
+router.post("/verify", auth.verifyOTP);
+router.post("/forgot-password", auth.forgotPassword);
+router.post("/reset-password", auth.resetPassword);
 
 /* ------------------------------------------------------- */
 module.exports = router;

@@ -2,41 +2,43 @@
 /* --------------------------------------
           | Modern Chat API |
 ----------------------------------------- */
-const sgMail = require("@sendgrid/mail");
+const nodemailer = require("nodemailer");
 const dotenv = require("dotenv");
 /* ------------------------------------------------------- */
-dotenv.config({ path: "../config.env" });
+dotenv.config();
 
-sgMail.setApiKey(process.env.SG_KEY);
+const transporter = nodemailer.createTransport({
+  host: "atalante.alastyr.com",
+  port: 465,
+  secure: true,
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
+  },
+});
 
-const sendSGMail = async ({
-  recipient,
-  sender,
-  subject,
-  html,
-  text,
-  attachments,
-}) => {
+const sendEmail = async ({ to, sender, subject, html, text, attachments }) => {
   try {
-    const from = sender || "ilkaytech@gmail.com";
+    const from = sender || "info@chatbop.com.tr";
     const msg = {
-      to: recipient, // email of recipient
-      from: from, // this will be our verified sender
-      subject,
-      html: html,
+      from: from,
+      to: to,
+      subject: subject,
       text: text,
+      html: html,
       attachments,
     };
-    return sgMail.send(msg);
+    return await transporter.sendMail(msg);
   } catch (error) {
-    console.log(error);
+    console.error("Error sending email:", error);
+    throw error;
   }
 };
 
 exports.sendEmail = async (args) => {
   if (process.env.NODE_ENV === "development") {
-    return new Promise.resolve();
+    return Promise.resolve();
   } else {
-    return sendSGMail(args);
+    return sendEmail(args);
   }
 };

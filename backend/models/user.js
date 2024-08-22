@@ -52,8 +52,10 @@ const userSchema = new mongoose.Schema({
   },
   createdAt: {
     type: Date,
+    default: Date.now,
   },
   updatedAt: {
+    // unselect
     type: Date,
   },
   verified: {
@@ -61,45 +63,46 @@ const userSchema = new mongoose.Schema({
     default: false,
   },
   otp: {
-    type: Number,
+    type: String,
   },
-  opt_expiry_time: {
+  otp_expiry_time: {
     type: Date,
   },
 });
 
 userSchema.pre("save", async function (next) {
-  // Only run this fxn if OTP is actually modified
+  // Only run this function if password was actually modified
+  if (!this.isModified("otp") || !this.otp) return next();
 
-  if (!this.isModified("otp")) return next();
+  // Hash the otp with cost of 12
+  this.otp = await bcrypt.hash(this.otp.toString(), 12);
 
-  // Hash the OTP with the cost of 12
-  this.otp = await bcrypt.hash(this.otp, 12);
+  console.log(this.otp.toString(), "FROM PRE SAVE HOOK");
+
   next();
 });
 
 userSchema.pre("save", async function (next) {
-  // Only run this fxn if OTP is actually modified
+  // Only run this function if password was actually modified
+  if (!this.isModified("password") || !this.password) return next();
 
-  if (!this.isModified("password")) return next();
+  // Hash the password with cost of 12
+  this.password = await bcrypt.hash(this.password, 12);
 
-  // Hash the OTP with the cost of 12
-  this.otp = await bcrypt.hash(this.password, 12);
+  //! Shift it to next hook // this.passwordChangedAt = Date.now() - 1000;
+
   next();
 });
 
 userSchema.methods.correctPassword = async function (
-  canditatePassword, // 123456
+  candidatePassword, // 123456
   userPassword
 ) {
-  return await bcrypt.compare(canditatePassword, userPassword);
+  return await bcrypt.compare(candidatePassword, userPassword);
 };
 
-userSchema.methods.correctOTP = async function (
-  canditateOTP, // 123456
-  userOTP
-) {
-  return await bcrypt.compare(canditateOTP, userOTP);
+userSchema.methods.correctOTP = async function (candidateOTP, userOTP) {
+  return await bcrypt.compare(candidateOTP, userOTP);
 };
 
 userSchema.methods.createPasswordResetToken = function () {
@@ -111,12 +114,11 @@ userSchema.methods.createPasswordResetToken = function () {
     .digest("hex");
 
   this.passwordResetExpires = Date.now() + 10 * 60 * 1000;
-
   return resetToken;
 };
 
 userSchema.methods.changedPasswordAfter = function (timestamp) {
-  return timestamp < this.passwordChangedAt;
+  return this.passwordChangedAt && timestamp < this.passwordChangedAt.getTime();
 };
 
 /* ------------------------------------------------------- */

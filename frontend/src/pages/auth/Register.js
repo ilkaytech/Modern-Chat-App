@@ -8,7 +8,7 @@ const Register = () => {
   return (
     <>
       <Stack spacing={2} sx={{ mb: 5, position: "relative" }}>
-        <Typography>Get Started With Tawk</Typography>
+        <Typography>Get Started With ChatBop</Typography>
         <Stack direction={"row"} spacing={0.5}>
           <Typography variant="body2">Already have an account?</Typography>
           <Link component={RouterLink} to="/auth/login" variant="subtitle2">
