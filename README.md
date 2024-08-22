@@ -16,7 +16,7 @@
 <table>
   <tr>
     <td><img src="./Login.png" alt="Login" width="325"/></td>
-    <td><img src="./register.png" alt="Register" width="300"/></td>
+    <td><img src="./Register.png" alt="Register" width="300"/></td>
   </tr>
 </table>
 
