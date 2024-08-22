@@ -9,14 +9,14 @@
 
 ### ChatBop:
 
-![ERD](../Landing_page.png)
+![ERD](./Landing_page.png)
 
 ### Login - Register:
 
 <table>
   <tr>
-    <td><img src="../Login.png" alt="Login" width="325"/></td>
-    <td><img src="../register.png" alt="Register" width="300"/></td>
+    <td><img src="./Login.png" alt="Login" width="325"/></td>
+    <td><img src="./register.png" alt="Register" width="300"/></td>
   </tr>
 </table>
 
@@ -24,8 +24,8 @@
 
 <table>
   <tr>
-    <td><img src="../Forgot password.png" alt="Login" width="297"/></td>
-    <td><img src="../Reset.png" alt="Register" width="300"/></td>
+    <td><img src="./Forgot password.png" alt="Login" width="297"/></td>
+    <td><img src="./Reset.png" alt="Register" width="300"/></td>
   </tr>
 </table>
 
