@@ -8,14 +8,12 @@ const jwt = require("jsonwebtoken");
 const otpGenerator = require("otp-generator");
 const signToken = (userId) => jwt.sign({ userId }, process.env.JWT_SECRET);
 const crypto = require("crypto");
-
 const User = require("../models/user");
 const filterObj = require("../utils/filterObj");
 const { promisify } = require("util");
 const mailService = require("../services/mailler");
 const otp = require("../Templates/Mail/otp");
 const resetPassword = require("../Templates/Mail/resetPassword");
-
 /* ------------------------------------------------------- */
 
 // Signup => register - sendOTP - verifyOTP
@@ -23,7 +21,6 @@ const resetPassword = require("../Templates/Mail/resetPassword");
 // https://chatbop.com.tr/auth/register
 
 // Register New User:
-
 exports.register = async (req, res, next) => {
   const { firstName, lastName, email, password } = req.body;
 
@@ -62,7 +59,6 @@ exports.register = async (req, res, next) => {
 };
 
 // sendOTP
-
 exports.sendOTP = async (req, res, next) => {
   const { userId } = req;
 
@@ -98,7 +94,6 @@ exports.sendOTP = async (req, res, next) => {
 };
 
 // verifyOTP
-
 exports.verifyOTP = async (req, res, next) => {
   const { email, otp } = req.body;
 
@@ -145,7 +140,6 @@ exports.verifyOTP = async (req, res, next) => {
 };
 
 // Login:
-
 exports.login = async (req, res, next) => {
   const { email, password } = req.body;
 
@@ -181,7 +175,6 @@ exports.login = async (req, res, next) => {
 
 exports.protect = async (req, res, next) => {
   // 1) Getting token (JWT) and check if it's there
-
   let token;
 
   // Bearer:
@@ -192,43 +185,40 @@ exports.protect = async (req, res, next) => {
     token = req.headers.authorization.split(" ")[1];
   } else if (req.cookies.jwt) {
     token = req.cookies.jwt;
-  } else {
-    res.status(400).json({
-      status: "error",
-      message: "You are not logged In! Please log in to get access",
-    });
-    return;
+  }
+  if (!token) {
+    return next(
+      new AppError("You are not logged In! Please log in to get access", 401)
+    );
   }
 
   // 2) Verification of token
   const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
-
+  console.log(decoded);
   // 3) Check if user still exist
   const this_user = await User.findById(decoded.userId);
-
   if (!this_user) {
-    res.status(400).json({
-      status: "error",
-      message: "The user doesn't exist",
-    });
-    return;
+    return next(
+      new AppError(
+        "The user belonging to this token does no longer exists",
+        401
+      )
+    );
   }
   // 4) Check if user changed their password after token was issued
 
   if (this_user.changedPasswordAfter(decoded.iat)) {
-    res.status(400).json({
-      status: "error",
-      message: "User recently updated password! Please log in again",
-    });
-    return;
+    return next(
+      new AppError("User recently updated password! Please log in again", 401)
+    );
   }
 
+  // GRANT ACCESS TO PROTECTED ROUTE
   req.user = this_user;
   next();
 };
 
-// Types of routes => Protected (Only logged in users can access these) & UnProducted
-
+// Forgot Password:
 exports.forgotPassword = async (req, res, next) => {
   // 1) Get users email
   const user = await User.findOne({ email: req.body.email });
@@ -276,6 +266,7 @@ exports.forgotPassword = async (req, res, next) => {
   }
 };
 
+// Reset Password:
 exports.resetPassword = async (req, res, next) => {
   // 1) Get user based on token
   const hashedToken = crypto
