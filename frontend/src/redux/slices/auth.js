@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import axios from "../../utils/axios";
+import { showSnackbar } from "./app";
 
 const initialState = {
   isLoading: false,
@@ -54,9 +55,19 @@ export function LoginUser(formValues) {
             token: response.data.token,
           })
         );
+        dispatch(
+          showSnackbar({ severity: "success", message: response.data.message })
+        );
+        dispatch(
+          slice.actions.updateIsLoading({ isLoading: false, error: false })
+        );
       })
       .catch(function (error) {
         console.log(error);
+        dispatch(showSnackbar({ severity: "error", message: error.message }));
+        dispatch(
+          slice.actions.updateIsLoading({ isLoading: false, error: true })
+        );
       });
   };
 }
@@ -85,6 +96,7 @@ export function ForgotPassword(formValues) {
 
 export function NewPassword(formValues) {
   return async (dispatch, getState) => {
+    console.log(formValues);
     await axios
       .post(
         "/auth/reset-password",

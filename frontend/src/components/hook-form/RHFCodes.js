@@ -8,7 +8,7 @@ const RHFCodes = ({ keyName = "", inputs = [], ...other }) => {
   const { control } = useFormContext();
 
   const handleChangeWithNextField = (event, handleChange) => {
-    const { maxLenght, value, name } = event.target;
+    const { maxLength, value, name } = event.target;
 
     const fieldIndex = name.replace(keyName, "");
 
@@ -18,10 +18,10 @@ const RHFCodes = ({ keyName = "", inputs = [], ...other }) => {
       `input[name=${keyName}${fieldIntIndex + 1}]`
     );
 
-    if (value.lenght > maxLenght) {
+    if (value.length > maxLength) {
       event.target.value = value[0];
     }
-    if (value.lenght >= maxLenght && fieldIntIndex < 6 && nextField !== null) {
+    if (value.length >= maxLength && fieldIntIndex < 6 && nextField !== null) {
       nextField.focus();
     }
     handleChange(event);
@@ -51,7 +51,7 @@ const RHFCodes = ({ keyName = "", inputs = [], ...other }) => {
                 },
               }}
               inputProps={{
-                maxLenght: 1,
+                maxLength: 1,
                 type: "number",
               }}
               {...other}
