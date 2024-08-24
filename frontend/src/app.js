@@ -9,7 +9,7 @@ import Snackbar from "@mui/material/Snackbar";
 
 import MuiAlert from "@mui/material/Alert";
 import { useDispatch, useSelector } from "react-redux";
-import { closeSnackBar } from "./redux/slices/app";
+import { closeSnackbar } from "./redux/slices/app";
 
 const vertical = "bottom";
 const horizontal = "center";
@@ -44,13 +44,13 @@ function App() {
           key={vertical + horizontal}
           onClose={() => {
             console.log("This is clicked");
-            dispatch(closeSnackBar());
+            dispatch(closeSnackbar());
           }}
         >
           <Alert
             onClose={() => {
               console.log("This is clicked");
-              dispatch(closeSnackBar());
+              dispatch(closeSnackbar());
             }}
             severity={severity}
             sx={{ width: "100%" }}
