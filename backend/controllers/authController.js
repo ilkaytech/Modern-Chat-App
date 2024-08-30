@@ -126,7 +126,6 @@ exports.verifyOTP = async (req, res, next) => {
   // OTP is correct
   user.verified = true;
   user.otp = undefined;
-
   await user.save({ new: true, validateModifiedOnly: true });
 
   const token = signToken(user._id);
@@ -151,12 +150,17 @@ exports.login = async (req, res, next) => {
     return;
   }
 
-  const userDoc = await User.findOne({ email: email }).select("+password");
+  const user = await User.findOne({ email: email }).select("+password");
 
-  if (
-    !userDoc ||
-    !(await userDoc.correctPassword(password, userDoc.password))
-  ) {
+  if (!user || !user.password) {
+    res.status(400).json({
+      status: "error",
+      message: "Incorrect password",
+    });
+    return;
+  }
+
+  if (!user || !(await user.correctPassword(password, user.password))) {
     res.status(400).json({
       status: "error",
       message: "Email or password is incorrect",
@@ -164,12 +168,13 @@ exports.login = async (req, res, next) => {
     return;
   }
 
-  const token = signToken(userDoc._id);
+  const token = signToken(user._id);
 
   res.status(200).json({
     status: "success",
     message: "Logged in successfully",
     token,
+    user_id: user._id,
   });
 };
 
