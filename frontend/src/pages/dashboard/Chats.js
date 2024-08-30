@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useTheme } from "@mui/material/styles";
 import {
   Box,
@@ -14,7 +14,6 @@ import {
   MagnifyingGlass,
   User,
 } from "phosphor-react";
-import { ChatList } from "../../data";
 import { SimpleBarStyle } from "../../components/Scrollbar";
 import {
   Search,
@@ -23,10 +22,27 @@ import {
 } from "../../components/Search";
 import ChatElement from "../../components/ChatElement";
 import Friends from "../../sections/main/Friends";
+import { socket } from "../../socket";
+import { useSelector } from "react-redux";
+
+const user_id = window.localStorage.getItem("user_id");
 
 const Chats = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const theme = useTheme();
+
+  const { conversations } = useSelector(
+    (state) => state.conversations.direct_chat
+  );
+
+  useEffect(() => {
+    socket.emit("get_direct_conversations", { user_id }, (data) => {
+      console.log(data); // this data is the list of conversations
+      // dispatch action
+
+      // dispatch(FetchDirectConversations({ conversations: data }));
+    });
+  }, []);
 
   const handleCloseDialog = () => {
     setOpenDialog(false);
@@ -45,8 +61,8 @@ const Chats = () => {
           backgroundColor:
             theme.palette.mode === "light"
               ? "#F8FAFF"
-              : theme.palette.background.paper,
-          boxShadow: "0px,0px,2px rgba(0,0,0,0.25)",
+              : theme.palette.background.default,
+          boxShadow: "0px 0px 2px rgba(0,0,0,0.25)",
         }}
       >
         <Stack p={3} spacing={2} sx={{ height: "100vh" }}>
@@ -87,23 +103,27 @@ const Chats = () => {
             </Stack>
             <Divider />
           </Stack>
-          <Stack sx={{ flexGrow: 1, overflow: "scroll", height: "100%" }}>
+          <Stack
+            spacing={2}
+            direction="column"
+            sx={{ flexGrow: 1, overflow: "scroll", height: "100%" }}
+          >
             <SimpleBarStyle timeout={500} clickOnTrack={false}>
               <Stack spacing={2.4}>
-                <Typography variant="subtitle2" sx={{ color: "#676767" }}>
+                {/* <Typography variant="subtitle2" sx={{ color: "#676767" }}>
                   Pinned
                 </Typography>
-                {ChatList.filter((el) => el.pinned).map((el) => (
-                  <ChatElement key={el.id} {...el} />
-                ))}
-              </Stack>
-              <Stack spacing={2.4}>
+                {ChatList.filter((el) => el.pinned).map((el) => {
+                  return <ChatElement {...el} />;
+                })} */}
                 <Typography variant="subtitle2" sx={{ color: "#676767" }}>
                   All Chats
                 </Typography>
-                {ChatList.filter((el) => !el.pinned).map((el) => (
-                  <ChatElement key={el.id} {...el} />
-                ))}
+                {conversations
+                  .filter((el) => !el.pinned)
+                  .map((el) => {
+                    return <ChatElement {...el} />;
+                  })}
               </Stack>
             </SimpleBarStyle>
           </Stack>

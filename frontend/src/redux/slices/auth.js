@@ -55,6 +55,8 @@ export function LoginUser(formValues) {
             token: response.data.token,
           })
         );
+        window.localStorage.setItem("user_id", response.data.user_id);
+
         dispatch(
           showSnackbar({ severity: "success", message: response.data.message })
         );
@@ -71,8 +73,10 @@ export function LoginUser(formValues) {
       });
   };
 }
+
 export function LogoutUser() {
   return async (dispatch, getState) => {
+    window.localStorage.removeItem("user_id");
     dispatch(slice.actions.signOut());
   };
 }
@@ -179,6 +183,7 @@ export function VerifyEmail(formValues) {
             token: response.data.token,
           })
         );
+        window.localStorage.setItem("user_id", response.data.user_id);
       })
       .catch((error) => {
         console.log(error);

@@ -30,7 +30,7 @@ const ProfileForm = () => {
     setValue,
     setError,
     handleSubmit,
-    formState: { errors, isSubmitting, isSubmitSuccessful },
+    formState: { errors },
   } = methods;
 
   const values = watch();

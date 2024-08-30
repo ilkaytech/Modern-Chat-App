@@ -3,6 +3,7 @@ import storage from "redux-persist/lib/storage";
 // slices
 import appReducer from "./slices/app";
 import authReducer from "./slices/auth";
+import conversationReducer from "./slices/conversation";
 
 /* ----------------------------------------------------------- */
 
@@ -17,6 +18,7 @@ const rootPersistConfig = {
 const rootReducer = combineReducers({
   app: appReducer,
   auth: authReducer,
+  conversations: conversationReducer,
 });
 
 export { rootPersistConfig, rootReducer };

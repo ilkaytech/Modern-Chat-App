@@ -1,46 +1,32 @@
-import { Dialog, DialogContent, Stack, Tab, Tabs } from "@mui/material";
 import React, { useEffect, useState } from "react";
+import { Dialog, DialogContent, Stack, Tab, Tabs } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import {
   FetchFriendRequests,
   FetchFriends,
   FetchUsers,
 } from "../../redux/slices/app";
+import {
+  FriendComponent,
+  FriendRequestComponent,
+  UserComponent,
+} from "../../components/Friends";
 
-const UserList = () => {
+const UsersList = () => {
   const dispatch = useDispatch();
+
+  const { users } = useSelector((state) => state.app);
 
   useEffect(() => {
     dispatch(FetchUsers());
-  }, [dispatch]);
+  });
 
-  const { users } = useSelector((state) => state.app);
   return (
     <>
       {users.map((el, idx) => {
-        // TODO => Render UserComponent
-        return <></>;
+        // Render UserComponent
+        return <UserComponent key={idx} {...el} />;
       })}
-      {}
-    </>
-  );
-};
-
-const FriendsList = () => {
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(FetchFriends());
-  }, [dispatch]);
-
-  const { friends } = useSelector((state) => state.app);
-  return (
-    <>
-      {friends.map((el, idx) => {
-        // TODO => Render FriendComponent
-        return <></>;
-      })}
-      {}
     </>
   );
 };
@@ -48,18 +34,38 @@ const FriendsList = () => {
 const FriendRequestList = () => {
   const dispatch = useDispatch();
 
+  const { friendRequests } = useSelector((state) => state.app);
+
   useEffect(() => {
     dispatch(FetchFriendRequests());
-  }, [dispatch]);
+  });
 
-  const { friendRequests } = useSelector((state) => state.app);
   return (
     <>
       {friendRequests.map((el, idx) => {
         // TODO => Render FriendRequestComponent
-        return <></>;
+        // el => {_id, sender:{_id,firstName, lastName,img , online}}
+        return <FriendRequestComponent key={idx} {...el.sender} id={el.id} />;
       })}
-      {}
+    </>
+  );
+};
+
+const FriendsList = () => {
+  const dispatch = useDispatch();
+
+  const { friends } = useSelector((state) => state.app);
+
+  useEffect(() => {
+    dispatch(FetchFriends());
+  });
+
+  return (
+    <>
+      {friends.map((el, idx) => {
+        // Render FriendComponent
+        return <FriendComponent key={idx} {...el} />;
+      })}
     </>
   );
 };
@@ -93,7 +99,7 @@ const Friends = ({ open, handleClose }) => {
             {(() => {
               switch (value) {
                 case 0: // display all users
-                  return <UserList />;
+                  return <UsersList />;
 
                 case 1: // display all friends
                   return <FriendsList />;
